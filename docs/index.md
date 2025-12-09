@@ -1,7 +1,5 @@
 # Proyecto: Plataforma controlada por gestos de la mano
 
----
-
 ## 1) Resumen
 
 - **Equipo / Autor(es):** Ximena Guadalupe Verdi Toledo  
