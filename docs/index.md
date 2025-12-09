@@ -66,7 +66,6 @@ Al ejecutar el sistema completo:
 
 Se obtuvo una respuesta **suave, estable y en tiempo real**, lo que demuestra que se puede implementar control de plataformas robóticas de forma intuitiva utilizando visión por computadora y actuadores económicos.
 
-
 ## 5) Conclusión
 
 El proyecto logró integrar de forma práctica varias áreas vistas en la materia **Elementos Programables II**:
