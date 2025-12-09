@@ -105,9 +105,6 @@ def send_bt(message: str):
     except:
         print("Error enviando datos")
 
-
-# ================== MEDIAPIPE ==================
-
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(max_num_hands=1,
                        min_detection_confidence=0.6,
@@ -116,7 +113,6 @@ mp_draw = mp.solutions.drawing_utils
 
 cap = cv2.VideoCapture(0)
 
-# ===== FILTROS =====
 pitch_filtrado = 0
 roll_filtrado = 0
 alpha = 0.25
@@ -124,12 +120,10 @@ alpha = 0.25
 ultimo_envio = time.time()
 intervalo_envio = 0.05
 
-# ===== HOME =====
 HOME_IZQ = 90
 HOME_ARRIBA = 90
 HOME_DER = 90
 
-# ===== GANANCIAS =====
 K_pitch = 30.0
 K_roll  = 0.05
 K_lat   = 85.0
@@ -167,7 +161,7 @@ while cap.isOpened():
             cv2.circle(img, (mx,my), 10, (0,255,0), -1)
             cv2.circle(img, (px,py), 10, (0,0,255), -1)
 
-            # ---------- cálculos ----------
+            
             pitch = (muneca.z - medio.z) * 1.8
             pitch = max(-1, min(1, pitch))
 
@@ -183,25 +177,25 @@ while cap.isOpened():
             if abs(roll_filtrado) < 0.05:
                 roll_filtrado = 0
 
-            # ---------- servos ----------
-            # centro
+            
+            
             a_arriba = HOME_ARRIBA + K_pitch*pitch_filtrado + K_mid_acompa*abs(roll_filtrado)
 
-            # laterales
+          
             delta_lat = K_lat * roll_filtrado
             a_izq = HOME_IZQ - delta_lat
             a_der = HOME_DER + delta_lat
 
-            # acompañamiento pitch
+            
             a_izq += (K_pitch*0.25)*pitch_filtrado
             a_der += (K_pitch*0.25)*pitch_filtrado
 
-            # límites
+            
             a_izq = int(max(0, min(180, a_izq)))
             a_arriba = int(max(0, min(180, a_arriba)))
             a_der = int(max(0, min(180, a_der)))
 
-            # enviar
+            
             if time.time() - ultimo_envio >= intervalo_envio:
                 msg = f"ANG:{a_izq},{a_arriba},{a_der}\n"
                 send_bt(msg)
