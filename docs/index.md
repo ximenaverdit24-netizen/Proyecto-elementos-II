@@ -17,10 +17,10 @@ El firmware del ESP32 recibe comandos del tipo `ANG:x,y,z`, aplica rampas de mov
 
 ## 2) Objetivos
 
-### 🎯 Objetivo general
+###  Objetivo general
 Desarrollar un sistema de control para una plataforma Stewart de 3 grados de libertad, utilizando **reconocimiento de gestos de la mano** con visión por computadora y **comunicación inalámbrica Bluetooth** hacia un ESP32 que gobierna los servomotores.
 
-### 🎯 Objetivos específicos
+###  Objetivos específicos
 
 - **OP1.** Implementar la detección de la mano en tiempo real con **MediaPipe**, obteniendo los landmarks de muñeca, dedo medio y pulgar.  
 - **OP2.** Calcular los parámetros de inclinación (**pitch** y **roll**) a partir de las posiciones relativas de estos puntos y aplicar filtros para reducir ruido y temblor.  
@@ -31,7 +31,7 @@ Desarrollar un sistema de control para una plataforma Stewart de 3 grados de lib
 
 ## 3) Alcance y exclusiones
 
-### ✅ Alcance
+###  Alcance
 - Diseño e impresión 3D de la **estructura de la plataforma Stewart** (base, brazos y soportes).  
 - Implementación de un script en **Python** con OpenCV + MediaPipe para:  
   - Captura de video.  
@@ -43,7 +43,7 @@ Desarrollar un sistema de control para una plataforma Stewart de 3 grados de lib
   - Conversión a **PWM de 12 bits, 50 Hz**.  
   - Movimiento suave de los servos mediante rampa y límites de seguridad.  
 
-### 🚫 Exclusiones / restricciones
+###  Exclusiones / restricciones
 - No se utiliza realimentación de posición de los servos (no hay encoders).  
 - No se implementa un controlador PID formal; el control se basa en mapeos directos de los gestos y filtrado EMA.  
 - La detección de la mano asume **buena iluminación** y una sola mano en cuadro.  
@@ -66,11 +66,8 @@ Al ejecutar el sistema completo:
 
 Se obtuvo una respuesta **suave, estable y en tiempo real**, lo que demuestra que se puede implementar control de plataformas robóticas de forma intuitiva utilizando visión por computadora y actuadores económicos.
 
----
 
-### 📌 5.1 Script Python – Control por gestos
-ya wey  borrate 
-## 6) Conclusión
+## 5) Conclusión
 
 El proyecto logró integrar de forma práctica varias áreas vistas en la materia **Elementos Programables II**:
 
