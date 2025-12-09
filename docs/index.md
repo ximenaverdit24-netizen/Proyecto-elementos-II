@@ -1,4 +1,4 @@
-# Proyecto: Plataforma Stewart controlada por gestos de la mano
+# Proyecto: Plataforma controlada por gestos de la mano
 
 ---
 
