@@ -1,4 +1,5 @@
-# 📚 proyecto final lol
+# 📚 proyecto final hola
+
 
 > Plantilla genérica para documentar proyectos académicos o de ingeniería.  
 > Copia y adapta las secciones según tu necesidad.
