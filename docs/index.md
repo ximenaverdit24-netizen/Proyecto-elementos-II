@@ -7,7 +7,7 @@
 - **Fecha:** 08/12/2025  
 
 **Descripción breve:**  
-Este proyecto implementa una plataforma tipo **Stewart** de 3 grados de libertad controlada mediante **gestos de la mano**.  
+Este proyecto implementa una plataforma tipo **Stewart** de 3 grados controlada mediante **gestos de la mano**.  
 El sistema utiliza **visión por computadora con MediaPipe** para detectar los landmarks de la mano (muñeca, dedo medio y pulgar) y, a partir de ellos, calcular los ángulos de **pitch** (inclinación arriba/abajo) y **roll** (inclinación izquierda/derecha).
 
 Los valores calculados se filtran con un **filtro exponencial** para suavizar el movimiento y, posteriormente, se envían por **Bluetooth Classic** a un **ESP32**, el cual controla **tres servomotores MG90S** en configuración triangular mediante **PWM a 50 Hz**.  
