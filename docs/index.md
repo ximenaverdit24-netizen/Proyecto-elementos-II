@@ -80,8 +80,6 @@ import mediapipe as mp
 import time
 import bluetooth
 
-# ================== CONEXIÓN BLUETOOTH ==================
-
 PORT = 1
 ESP32_MAC = "14:33:5C:02:4D:2A"   # CAMBIA a la MAC de tu ESP32
 
@@ -217,6 +215,178 @@ sock.close()
 cap.release()
 cv2.destroyAllWindows()
 print("Programa terminado")
+
+```arduino 
+#include <Arduino.h>
+#include "BluetoothSerial.h"
+
+BluetoothSerial SerialBT;
+
+// ===== Buffer para lectura BT no bloqueante =====
+String btBuffer;
+
+// ===== Pines de los servos =====
+#define SERVO_IZQ    15   // Servo izquierdo
+#define SERVO_ARRIBA 33   // Servo central / vertical
+#define SERVO_DER    25   // Servo derecho
+
+// ===== ÁNGULOS HOME =====
+const int HOME_IZQ    = 90;
+const int HOME_ARRIBA = 90;
+const int HOME_DER    = 90;
+
+// ===== PWM =====
+const uint32_t FREQ_HZ   = 50;
+const uint8_t  RES_BITS  = 12;
+const uint16_t DUTY_MIN  = 205;   // ~1.0 ms (≈0°)
+const uint16_t DUTY_MAX  = 410;   // ~2.0 ms (≈180°)
+
+// Convierte grados físicos 0..180 a duty
+uint16_t dutyFromDeg(int deg) {
+  deg = constrain(deg, 0, 180);
+  return map(deg, 0, 180, DUTY_MIN, DUTY_MAX);
+}
+
+// Convierte de ángulo lógico (0..180) a físico (invertido)
+int logicalToPhysical(int logicalDeg) {
+  logicalDeg = constrain(logicalDeg, 0, 180);
+  return 180 - logicalDeg;  // invertido
+}
+
+// Escribe usando grados LÓGICOS
+void writeServoLogical(int pin, int logicalDeg) {
+  int fisico = logicalToPhysical(logicalDeg);
+  ledcWrite(pin, dutyFromDeg(fisico));
+}
+
+// Configurar servo con ángulo lógico inicial
+void configServo(int pin, int initialLogical) {
+  pinMode(pin, OUTPUT);
+  ledcAttach(pin, FREQ_HZ, RES_BITS);   // en core 3.x el pin ES el canal
+  writeServoLogical(pin, initialLogical);
+}
+
+// ===== Rampa =====
+const int  LIM_MIN     = 0;
+const int  LIM_MAX     = 180;
+const int  PASO_RAMPA  = 5;
+const uint32_t DT_RAMP = 10;
+const uint32_t TIMEOUT_MS = 700;
+
+// Estado actual lógicos
+int posIzq    = HOME_IZQ;
+int posArriba = HOME_ARRIBA;
+int posDer    = HOME_DER;
+
+// Objetivos
+int tgtIzq    = HOME_IZQ;
+int tgtArriba = HOME_ARRIBA;
+int tgtDer    = HOME_DER;
+
+uint32_t tPrevRamp = 0;
+uint32_t tLastCmd  = 0;
+
+// Rampa suave
+void aplicarRampa() {
+  uint32_t now = millis();
+  if (now - tPrevRamp < DT_RAMP) return;
+  tPrevRamp = now;
+
+  auto go = [&](int actual, int target){
+    if(actual < target) return min(actual + PASO_RAMPA, target);
+    if(actual > target) return max(actual - PASO_RAMPA, target);
+    return actual;
+  };
+
+  posIzq    = go(posIzq,    tgtIzq);
+  posArriba = go(posArriba, tgtArriba);
+  posDer    = go(posDer,    tgtDer);
+
+  writeServoLogical(SERVO_IZQ,    posIzq);
+  writeServoLogical(SERVO_ARRIBA, posArriba);
+  writeServoLogical(SERVO_DER,    posDer);
+}
+
+// Parsea "ANG:x,y,z"
+bool parseAngulos(const String &msg, int &aIzq, int &aArriba, int &aDer){
+  if(!msg.startsWith("ANG:")) return false;
+
+  String data = msg.substring(4);
+  int c1 = data.indexOf(',');
+  int c2 = data.indexOf(',', c1+1);
+  if(c1 < 0 || c2 < 0) return false;
+
+  aIzq    = data.substring(0, c1).toInt();
+  aArriba = data.substring(c1+1, c2).toInt();
+  aDer    = data.substring(c2+1).toInt();
+
+  return true;
+}
+
+void setup() {
+  Serial.begin(115200);
+  SerialBT.begin("ESP32-Stewart");
+
+  configServo(SERVO_IZQ,    posIzq);
+  configServo(SERVO_ARRIBA, posArriba);
+  configServo(SERVO_DER,    posDer);
+
+  Serial.println("ESP32 listo - Plataforma Stewart");
+  Serial.println("Pines: 15 = Izq, 33 = Arriba, 25 = Der");
+
+  tLastCmd = millis();
+}
+
+void loop() {
+
+  while(SerialBT.available()) {
+    char c = (char)SerialBT.read();
+
+    if(c == '\n') {
+      String msg = btBuffer;
+      btBuffer = "";
+      msg.trim();
+
+      if(msg.length() > 0) {
+        tLastCmd = millis();
+
+        if(msg == "ZERO" || msg == "LOST"){
+          tgtIzq    = HOME_IZQ;
+          tgtArriba = HOME_ARRIBA;
+          tgtDer    = HOME_DER;
+          Serial.println("HOME ejecutado (ZERO/LOST)");
+        }
+        else {
+          int aI, aA, aD;
+          if(parseAngulos(msg, aI, aA, aD)){
+            tgtIzq    = constrain(aI, LIM_MIN, LIM_MAX);
+            tgtArriba = constrain(aA, LIM_MIN, LIM_MAX);
+            tgtDer    = constrain(aD, LIM_MIN, LIM_MAX);
+            Serial.printf("ANG -> %d, %d, %d\n", tgtIzq, tgtArriba, tgtDer);
+          }
+          else {
+            Serial.print("Comando desconocido: ");
+            Serial.println(msg);
+          }
+        }
+      }
+    }
+    else if(c != '\r') {
+      btBuffer += c;
+    }
+  }
+
+  if(millis() - tLastCmd > TIMEOUT_MS){
+    tgtIzq    = HOME_IZQ;
+    tgtArriba = HOME_ARRIBA;
+    tgtDer    = HOME_DER;
+  }
+
+  aplicarRampa();
+  delay(1);
+}
+
+
 
 ## 6) Conclusión
 
