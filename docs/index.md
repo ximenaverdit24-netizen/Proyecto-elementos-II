@@ -4,7 +4,7 @@
 
 ## 1) Resumen
 
-- **Equipo / Autor(es):** Emmanuel Angeles Barreto  
+- **Equipo / Autor(es):** Ximena Guadalupe Verdi Toledo 
 - **Curso / Asignatura:** Elementos Programables II  
 - **Fecha:** 07/12/2025  
 
