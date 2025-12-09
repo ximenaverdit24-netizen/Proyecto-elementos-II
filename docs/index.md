@@ -70,8 +70,9 @@ Se obtuvo una respuesta **suave, estable y en tiempo real**, lo que demuestra qu
 
 ### 📌 5.1 Script Python – Control por gestos
 
-<details>
-<summary>🖐️ Código Python – Control por gestos de la mano</summary>
+## 5) Archivos adjuntos / Código
+
+### 5.1 Script Python – Control por gestos
 
 ```python
 import cv2
@@ -222,10 +223,9 @@ sock.close()
 cap.release()
 cv2.destroyAllWindows()
 print("Programa terminado")
+```
 
-
-<details>
-<summary>⚙️ Firmware ESP32 – Control de servomotores</summary>
+### 5.2 Firmware ESP32 – Control de servomotores
 
 ```cpp
 #include <Arduino.h>
@@ -396,7 +396,7 @@ void loop() {
   aplicarRampa();
   delay(1);
 }
-
+```
 
 ## 6) Conclusión
 
