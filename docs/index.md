@@ -69,7 +69,7 @@ Se obtuvo una respuesta **suave, estable y en tiempo real**, lo que demuestra qu
 ---
 
 ### 📌 5.1 Script Python – Control por gestos
-
+ya wey  borrate 
 ## 6) Conclusión
 
 El proyecto logró integrar de forma práctica varias áreas vistas en la materia **Elementos Programables II**:
