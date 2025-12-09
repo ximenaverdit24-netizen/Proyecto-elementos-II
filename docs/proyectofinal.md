@@ -68,8 +68,6 @@ Al ejecutar el sistema completo:
 
 Se obtuvo una respuesta **suave, estable y en tiempo real**, lo que demuestra que se puede implementar control de plataformas robóticas de forma intuitiva utilizando visión por computadora y actuadores económicos.
 
----
-
 ### 📌 5.1 Script Python – Control por gestos
 
 ## 6) Conclusión
