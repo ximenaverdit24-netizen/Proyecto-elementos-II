@@ -3,7 +3,7 @@
 > Plantilla genérica para documentar proyectos académicos o de ingeniería.  
 > Copia y adapta las secciones según tu necesidad.
 
----
+
 
 ## 1) Resumen
 
