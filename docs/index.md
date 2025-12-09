@@ -4,7 +4,7 @@
 
 - **Equipo / Autor(es):** Ximena Guadalupe Verdi Toledo  
 - **Curso / Asignatura:** Elementos Programables II  
-- **Fecha:** 07/12/2025  
+- **Fecha:** 08/12/2025  
 
 **Descripción breve:**  
 Este proyecto implementa una plataforma tipo **Stewart** de 3 grados de libertad controlada mediante **gestos de la mano**.  
