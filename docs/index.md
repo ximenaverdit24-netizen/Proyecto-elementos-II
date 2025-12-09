@@ -71,7 +71,6 @@ Se obtuvo una respuesta **suave, estable y en tiempo real**, lo que demuestra qu
 
 El proyecto logró integrar de forma práctica varias áreas vistas en la materia **Elementos Programables II**:
 
-- Procesamiento de imagen en tiempo real con **OpenCV + MediaPipe**.  
 - Comunicación inalámbrica mediante **Bluetooth Classic** entre una PC y un microcontrolador.  
 - Generación y control de señales **PWM** para servomotores con un **ESP32**.  
 - Diseño y fabricación de una estructura mecánica mediante **impresión 3D**.
